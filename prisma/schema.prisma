@@ -33,6 +33,7 @@ model Objetos_Liturgicos {
   nome_objeto                       String
   Objetos_Liturgicos_Horarios_Missa Objetos_Liturgicos_Horarios_Missa[] @ignore
   horarios_missa                    Horarios_Missa[]                    @relation("Horarios_MissaToObjetos_Liturgicos")
+  escalas                           Escalas[]
 }
 
 model Escalas {
@@ -42,6 +43,8 @@ model Escalas {
   coroinhas              Coroinhas                @relation(fields: [id_coroinha], references: [id_coroinha])
   horarios_missa         Horarios_Missa           @relation(fields: [id_horario], references: [id_horario])
   Escalas_Horarios_Missa Escalas_Horarios_Missa[] @ignore
+  nome_objeto            Objetos_Liturgicos       @relation(fields: [id_objeto], references: [id_objeto])
+  id_objeto              Int 
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
