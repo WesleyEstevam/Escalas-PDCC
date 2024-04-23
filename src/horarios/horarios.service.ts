@@ -10,7 +10,7 @@ export class HorariosService {
   async create(createHorarioDto: CreateHorarioDto) {
     const { nome_capela, tipo_cerimonia, horario_missa } = createHorarioDto;
 
-    const novoCoroinha = await this.prisma.horarios_Missa.create({
+    const novoHorario = await this.prisma.horarios_Missa.create({
       data: {
         nome_capela,
         tipo_cerimonia,
@@ -18,7 +18,7 @@ export class HorariosService {
       },
     });
 
-    return novoCoroinha;
+    return novoHorario;
   }
 
   findAll() {
