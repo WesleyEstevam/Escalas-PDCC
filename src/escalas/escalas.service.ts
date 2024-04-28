@@ -7,10 +7,10 @@ import { PrismaService } from 'src/conexao/PrismaService';
 export class EscalasService {
   constructor(private prisma: PrismaService) {}
 
-  create(createEscalaDto: CreateEscalaDto) {
+  async create(createEscalaDto: CreateEscalaDto) {
     const { id_coroinha, id_horario, id_objeto } = createEscalaDto;
 
-    const novaEscala = this.prisma.escalas.create({
+    const novaEscala = await this.prisma.escalas.create({
       data: {
         id_coroinha,
         id_horario,
@@ -18,6 +18,33 @@ export class EscalasService {
       },
     });
     return novaEscala;
+  }
+
+  async verificarAltura(idCoroinha1: number, idCoroinha2: number) {
+    const coroinha1 = await this.prisma.coroinhas.findUnique({
+      where: { id_coroinha: idCoroinha1 },
+    });
+
+    const corinha2 = await this.prisma.coroinhas.findUnique({
+      where: { id_coroinha: idCoroinha2 },
+    });
+
+    if (!coroinha1 || !corinha2) {
+      throw new Error('Coroinha(s) não encontrado(s)');
+    }
+
+    const diferencaAltura = Math.abs(
+      coroinha1.altura_coroinha - corinha2.altura_coroinha,
+    );
+
+    if (diferencaAltura > 20) {
+      return {
+        message:
+          'Não é possível escalar os coroinhas! Muita diferença de altura',
+      };
+    } else {
+      return { message: 'Escala criada com sucesso' };
+    }
   }
 
   findAll() {

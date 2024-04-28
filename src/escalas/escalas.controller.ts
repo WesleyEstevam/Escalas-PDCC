@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { EscalasService } from './escalas.service';
 import { CreateEscalaDto } from './dto/create-escala.dto';
 import { UpdateEscalaDto } from './dto/update-escala.dto';
