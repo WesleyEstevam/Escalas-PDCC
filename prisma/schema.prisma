@@ -20,7 +20,7 @@ model Horarios_Missa {
   id_horario                        Int                                 @id @default(autoincrement())
   nome_capela                       String
   tipo_cerimonia                    String
-  horario_missa                     DateTime
+  horario_missa                     String
   Coroinhas_Horarios_Missa          Coroinhas_Horarios_Missa[]          @ignore
   escalas                           Escalas[]
   Escalas_Horarios_Missa            Escalas_Horarios_Missa[]            @ignore
