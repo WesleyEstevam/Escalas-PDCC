@@ -8,13 +8,23 @@ export class EscalasService {
   constructor(private prisma: PrismaService) {}
 
   async create(createEscalaDto: CreateEscalaDto) {
-    const { id_coroinha, id_horario, id_objeto } = createEscalaDto;
+    const {
+      id_coroinha,
+      id_horario,
+      id_objeto,
+      data_escala,
+      horario_missa,
+      tipo_cerimonia,
+    } = createEscalaDto;
 
     const novaEscala = await this.prisma.escalas.create({
       data: {
         id_coroinha,
         id_horario,
         id_objeto,
+        data_escala,
+        horario_missa,
+        tipo_cerimonia,
       },
     });
     return novaEscala;
@@ -51,6 +61,9 @@ export class EscalasService {
     return this.prisma.escalas.findMany({
       select: {
         id_escala: true,
+        data_escala: true,
+        horario_missa: true,
+        tipo_cerimonia: true,
         coroinhas: {
           select: {
             nome_coroinha: true,
@@ -59,7 +72,6 @@ export class EscalasService {
         horarios_missa: {
           select: {
             nome_capela: true,
-            horario_missa: true,
           },
         },
         nome_objeto: {

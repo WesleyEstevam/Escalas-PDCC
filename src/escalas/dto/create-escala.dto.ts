@@ -1,4 +1,4 @@
-import { IsEmpty, IsNumber } from 'class-validator';
+import { IsEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateEscalaDto {
   @IsEmpty()
@@ -12,4 +12,16 @@ export class CreateEscalaDto {
   @IsEmpty()
   @IsNumber()
   id_objeto: number;
+
+  @IsEmpty()
+  @IsString()
+  data_escala: string;
+
+  @IsEmpty()
+  @IsString()
+  horario_missa: string;
+
+  @IsEmpty()
+  @IsString()
+  tipo_cerimonia: string;
 }

@@ -19,8 +19,6 @@ model Coroinhas {
 model Horarios_Missa {
   id_horario                        Int                                 @id @default(autoincrement())
   nome_capela                       String
-  tipo_cerimonia                    String
-  horario_missa                     String
   Coroinhas_Horarios_Missa          Coroinhas_Horarios_Missa[]          @ignore
   escalas                           Escalas[]
   Escalas_Horarios_Missa            Escalas_Horarios_Missa[]            @ignore
@@ -45,6 +43,9 @@ model Escalas {
   Escalas_Horarios_Missa Escalas_Horarios_Missa[] @ignore
   nome_objeto            Objetos_Liturgicos       @relation(fields: [id_objeto], references: [id_objeto])
   id_objeto              Int 
+  data_escala            String
+  tipo_cerimonia         String
+  horario_missa          String
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
