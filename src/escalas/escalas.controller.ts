@@ -26,17 +26,17 @@ export class EscalasController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.escalasService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEscalaDto: UpdateEscalaDto) {
+  update(@Param('id') id: number, @Body() updateEscalaDto: UpdateEscalaDto) {
     return this.escalasService.update(+id, updateEscalaDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.escalasService.remove(+id);
   }
 }

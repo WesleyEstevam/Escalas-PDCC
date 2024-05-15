@@ -83,7 +83,11 @@ export class EscalasService {
     return `This action updates a #${id} escala`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} escala`;
+  async remove(id: number) {
+    return await this.prisma.escalas.delete({
+      where: {
+        id_escala: id,
+      },
+    });
   }
 }
