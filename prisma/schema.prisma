@@ -12,68 +12,68 @@ model Coroinhas {
   nome_coroinha            String
   sexo_coroinha            String
   altura_coroinha          Float?
-  Coroinhas_Horarios_Missa Coroinhas_Horarios_Missa[] @ignore
+  Coroinhas_Capelas        Coroinhas_Capelas[]        @ignore
   escalas                  Escalas[]
 }
 
-model Horarios_Missa {
-  id_horario                        Int                                 @id @default(autoincrement())
-  nome_capela                       String
-  Coroinhas_Horarios_Missa          Coroinhas_Horarios_Missa[]          @ignore
-  escalas                           Escalas[]
-  Escalas_Horarios_Missa            Escalas_Horarios_Missa[]            @ignore
-  Objetos_Liturgicos_Horarios_Missa Objetos_Liturgicos_Horarios_Missa[] @ignore
-  objetos_liturgicos                Objetos_Liturgicos[]                @relation("Horarios_MissaToObjetos_Liturgicos")
+model Capelas {
+  id_capela                        Int                                 @id @default(autoincrement())
+  nome_capela                      String
+  Coroinhas_Capelas                Coroinhas_Capelas[]                @ignore
+  escalas                          Escalas[]
+  Escalas_Capelas                  Escalas_Capelas[]                  @ignore
+  Objetos_Liturgicos_Capelas       Objetos_Liturgicos_Capelas[]       @ignore
+  objetos_liturgicos               Objetos_Liturgicos[]               @relation("CapelasToObjetos_Liturgicos")
 }
 
 model Objetos_Liturgicos {
   id_objeto                         Int                                 @id @default(autoincrement())
   nome_objeto                       String
-  Objetos_Liturgicos_Horarios_Missa Objetos_Liturgicos_Horarios_Missa[] @ignore
-  horarios_missa                    Horarios_Missa[]                    @relation("Horarios_MissaToObjetos_Liturgicos")
+  Objetos_Liturgicos_Capelas        Objetos_Liturgicos_Capelas[]        @ignore
+  capelas                           Capelas[]                           @relation("CapelasToObjetos_Liturgicos")
   escalas                           Escalas[]
 }
 
 model Escalas {
   id_escala              Int                      @id @default(autoincrement())
-  id_coroinha            Int
-  id_horario             Int
-  coroinhas              Coroinhas                @relation(fields: [id_coroinha], references: [id_coroinha])
-  horarios_missa         Horarios_Missa           @relation(fields: [id_horario], references: [id_horario])
-  Escalas_Horarios_Missa Escalas_Horarios_Missa[] @ignore
-  nome_objeto            Objetos_Liturgicos       @relation(fields: [id_objeto], references: [id_objeto])
-  id_objeto              Int 
+  id_coroinha            Int?
+  id_capela              Int
+  coroinhas              Coroinhas?                @relation(fields: [id_coroinha], references: [id_coroinha])
+  capelas                Capelas                  @relation(fields: [id_capela], references: [id_capela])
+  Escalas_Capelas        Escalas_Capelas[]        @ignore
+  nome_objeto            Objetos_Liturgicos?       @relation(fields: [id_objeto], references: [id_objeto])
+  id_objeto              Int? 
   data_escala            String
   tipo_cerimonia         String
   horario_missa          String
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model Coroinhas_Horarios_Missa {
+model Coroinhas_Capelas {
   Coroinhas_id_coroinha     Int            @default(autoincrement())
-  Horarios_Missa_id_horario Int            @default(autoincrement())
+  Capelas_id_capela         Int            @default(autoincrement())
   Coroinhas                 Coroinhas      @relation(fields: [Coroinhas_id_coroinha], references: [id_coroinha], onDelete: NoAction, onUpdate: NoAction)
-  Horarios_Missa            Horarios_Missa @relation(fields: [Horarios_Missa_id_horario], references: [id_horario], onDelete: NoAction, onUpdate: NoAction)
+  Capelas                   Capelas        @relation(fields: [Capelas_id_capela], references: [id_capela], onDelete: NoAction, onUpdate: NoAction)
 
   @@ignore
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model Escalas_Horarios_Missa {
+model Escalas_Capelas {
   Escalas_id_escala         Int            @default(autoincrement())
-  Horarios_Missa_id_horario Int            @default(autoincrement())
+  Capelas_id_capela         Int            @default(autoincrement())
   Escalas                   Escalas        @relation(fields: [Escalas_id_escala], references: [id_escala], onDelete: NoAction, onUpdate: NoAction)
-  Horarios_Missa            Horarios_Missa @relation(fields: [Horarios_Missa_id_horario], references: [id_horario], onDelete: NoAction, onUpdate: NoAction)
+  Capelas                   Capelas        @relation(fields: [Capelas_id_capela], references: [id_capela], onDelete: NoAction, onUpdate: NoAction)
 
   @@ignore
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model Objetos_Liturgicos_Horarios_Missa {
+model Objetos_Liturgicos_Capelas {
   Objetos_Liturgicos_id_objeto Int                @default(autoincrement())
-  Horarios_Missa_id_horario    Int                @default(autoincrement())
-  Objetos_Liturgicos           Objetos_Liturgicos @relation(fields: [Objetos_Liturgicos_id_objeto], references: [id_objeto], onDelete: NoAction, onUpdate: NoAction, map: "Objetos_Liturgicos_Horarios_M_Objetos_Liturgicos_id_objeto_fkey")
-  Horarios_Missa               Horarios_Missa     @relation(fields: [Horarios_Missa_id_horario], references: [id_horario], onDelete: NoAction, onUpdate: NoAction, map: "Objetos_Liturgicos_Horarios_Miss_Horarios_Missa_id_horario_fkey")
+  Capelas_id_capela            Int                @default(autoincrement())
+  Objetos_Liturgicos           Objetos_Liturgicos @relation(fields: [Objetos_Liturgicos_id_objeto], references: [id_objeto], onDelete: NoAction, onUpdate: NoAction)
+  Capelas                      Capelas           @relation(fields: [Capelas_id_capela], references: [id_capela], onDelete: NoAction, onUpdate: NoAction)
 
   @@ignore
 }

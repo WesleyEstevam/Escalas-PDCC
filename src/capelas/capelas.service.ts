@@ -1,33 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import { CreateHorarioDto } from './dto/create-horario.dto';
-import { UpdateHorarioDto } from './dto/update-horario.dto';
+import { CreateCapelasDto } from './dto/create-capelas.dto';
+import { UpdateCapelasDto } from './dto/update-capelas.dto';
 import { PrismaService } from 'src/conexao/PrismaService';
 
 @Injectable()
-export class HorariosService {
+export class CapelasService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createHorarioDto: CreateHorarioDto) {
-    const { nome_capela } = createHorarioDto;
+  async create(createCapelasDto: CreateCapelasDto) {
+    const { nome_capela } = createCapelasDto;
 
-    const novoHorario = await this.prisma.horarios_Missa.create({
+    const novaCapela = await this.prisma.capelas.create({
       data: {
         nome_capela,
       },
     });
 
-    return novoHorario;
+    return novaCapela;
   }
 
   findAll() {
-    return this.prisma.horarios_Missa.findMany();
+    return this.prisma.capelas.findMany();
   }
 
   findOne(id: number) {
     return `This action returns a #${id} horario`;
   }
 
-  update(id: number, updateHorarioDto: UpdateHorarioDto) {
+  update(id: number, updateCapelasDto: UpdateCapelasDto) {
     return `This action updates a #${id} horario`;
   }
 
