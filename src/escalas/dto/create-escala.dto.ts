@@ -18,6 +18,7 @@ export class CreateEscalaDto {
   @IsString()
   tipo_cerimonia: string;
 
+  @IsNotEmpty()
   @IsString()
   data_escala: string;
 }

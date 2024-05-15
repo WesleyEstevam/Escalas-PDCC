@@ -75,12 +75,19 @@ export class EscalasService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} escala`;
+  async findOne(id: number) {
+    return await this.prisma.escalas.findUnique({
+      where: {
+        id_escala: id,
+      },
+    });
   }
 
-  update(id: number, updateEscalaDto: UpdateEscalaDto) {
-    return `This action updates a #${id} escala`;
+  async update(id: number, updateEscalaDto: UpdateEscalaDto) {
+    return await this.prisma.escalas.update({
+      where: { id_escala: id },
+      data: updateEscalaDto,
+    });
   }
 
   async remove(id: number) {
