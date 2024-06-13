@@ -7,73 +7,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Coroinhas {
-  id_coroinha              Int                        @id @default(autoincrement())
-  nome_coroinha            String
-  sexo_coroinha            String
-  altura_coroinha          Float?
-  Coroinhas_Capelas        Coroinhas_Capelas[]        @ignore
-  escalas                  Escalas[]
+model Coroinha {
+  id_coroinha     Int                @id @default(autoincrement())
+  nome_coroinha   String
+  sexo_coroinha   String
+  altura_coroinha Float?
+  tipo_coroinha   String
+  escalasCoroinhas EscalaCoroinha[]
 }
 
-model Capelas {
-  id_capela                        Int                                 @id @default(autoincrement())
-  nome_capela                      String
-  Coroinhas_Capelas                Coroinhas_Capelas[]                @ignore
-  escalas                          Escalas[]
-  Escalas_Capelas                  Escalas_Capelas[]                  @ignore
-  Objetos_Liturgicos_Capelas       Objetos_Liturgicos_Capelas[]       @ignore
-  objetos_liturgicos               Objetos_Liturgicos[]               @relation("CapelasToObjetos_Liturgicos")
+model Capela {
+  id_capela          Int              @id @default(autoincrement())
+  nome_capela        String
+  escalas            Escala[]
+  objetosLiturgicos  ObjetoLiturgico[]
 }
 
-model Objetos_Liturgicos {
-  id_objeto                         Int                                 @id @default(autoincrement())
-  nome_objeto                       String
-  Objetos_Liturgicos_Capelas        Objetos_Liturgicos_Capelas[]        @ignore
-  capelas                           Capelas[]                           @relation("CapelasToObjetos_Liturgicos")
-  escalas                           Escalas[]
+model ObjetoLiturgico {
+  id_objeto       Int                @id @default(autoincrement())
+  nome_objeto     String
+  escalasObjetos  EscalaCoroinha[]
+  capelas         Capela[]
 }
 
-model Escalas {
-  id_escala              Int                      @id @default(autoincrement())
-  id_coroinha            Int?
-  id_capela              Int
-  coroinhas              Coroinhas?                @relation(fields: [id_coroinha], references: [id_coroinha])
-  capelas                Capelas                  @relation(fields: [id_capela], references: [id_capela])
-  Escalas_Capelas        Escalas_Capelas[]        @ignore
-  nome_objeto            Objetos_Liturgicos?       @relation(fields: [id_objeto], references: [id_objeto])
-  id_objeto              Int? 
-  data_escala            String
-  tipo_cerimonia         String
-  horario_missa          String
+model Escala {
+  id_escala       Int                @id @default(autoincrement())
+  id_capela       Int
+  capela          Capela             @relation(fields: [id_capela], references: [id_capela])
+  data_escala     DateTime
+  tipo_cerimonia  String
+  horario_missa   String
+  coroinhas       EscalaCoroinha[]   
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model Coroinhas_Capelas {
-  Coroinhas_id_coroinha     Int            @default(autoincrement())
-  Capelas_id_capela         Int            @default(autoincrement())
-  Coroinhas                 Coroinhas      @relation(fields: [Coroinhas_id_coroinha], references: [id_coroinha], onDelete: NoAction, onUpdate: NoAction)
-  Capelas                   Capelas        @relation(fields: [Capelas_id_capela], references: [id_capela], onDelete: NoAction, onUpdate: NoAction)
+model EscalaCoroinha {
+  id              Int                @id @default(autoincrement())
+  id_escala       Int
+  id_coroinha     Int
+  id_objeto       Int
+  escala          Escala             @relation(fields: [id_escala], references: [id_escala], onDelete: Cascade)
+  coroinha        Coroinha           @relation(fields: [id_coroinha], references: [id_coroinha], onDelete: Cascade)
+  objetoLiturgico ObjetoLiturgico    @relation(fields: [id_objeto], references: [id_objeto])
 
-  @@ignore
+  @@unique([id_escala, id_coroinha, id_objeto])
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model Escalas_Capelas {
-  Escalas_id_escala         Int            @default(autoincrement())
-  Capelas_id_capela         Int            @default(autoincrement())
-  Escalas                   Escalas        @relation(fields: [Escalas_id_escala], references: [id_escala], onDelete: NoAction, onUpdate: NoAction)
-  Capelas                   Capelas        @relation(fields: [Capelas_id_capela], references: [id_capela], onDelete: NoAction, onUpdate: NoAction)
-
-  @@ignore
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model Objetos_Liturgicos_Capelas {
-  Objetos_Liturgicos_id_objeto Int                @default(autoincrement())
-  Capelas_id_capela            Int                @default(autoincrement())
-  Objetos_Liturgicos           Objetos_Liturgicos @relation(fields: [Objetos_Liturgicos_id_objeto], references: [id_objeto], onDelete: NoAction, onUpdate: NoAction)
-  Capelas                      Capelas           @relation(fields: [Capelas_id_capela], references: [id_capela], onDelete: NoAction, onUpdate: NoAction)
-
-  @@ignore
-}

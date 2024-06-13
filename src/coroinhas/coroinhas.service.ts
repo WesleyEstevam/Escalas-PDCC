@@ -8,13 +8,15 @@ export class CoroinhasService {
   constructor(private prisma: PrismaService) {}
 
   create(createCoroinhaDto: CreateCoroinhaDto) {
-    const { nome_coroinha, sexo_coroinha, altura_coroinha } = createCoroinhaDto;
+    const { nome_coroinha, sexo_coroinha, altura_coroinha, tipo_coroinha } =
+      createCoroinhaDto;
 
-    const novoCoroinha = this.prisma.coroinhas.create({
+    const novoCoroinha = this.prisma.coroinha.create({
       data: {
         nome_coroinha,
         sexo_coroinha,
         altura_coroinha,
+        tipo_coroinha,
       },
     });
 
@@ -22,18 +24,38 @@ export class CoroinhasService {
   }
 
   findAll() {
-    return this.prisma.coroinhas.findMany();
+    return this.prisma.coroinha.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} coroinha`;
+    return this.prisma.coroinha.findUnique({
+      where: {
+        id_coroinha: id,
+      },
+    });
   }
 
-  update(id: number, updateCoroinhaDto: UpdateCoroinhaDto) {
-    return `This action updates a #${id} coroinha`;
+  async update(id: number, updateCoroinhaDto: UpdateCoroinhaDto) {
+    const { nome_coroinha, sexo_coroinha, altura_coroinha, tipo_coroinha } =
+      updateCoroinhaDto;
+
+    const atualizarCoroinha = await this.prisma.coroinha.update({
+      where: { id_coroinha: id },
+      data: {
+        nome_coroinha,
+        sexo_coroinha,
+        altura_coroinha,
+        tipo_coroinha,
+      },
+    });
+    return atualizarCoroinha;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} coroinha`;
+  async remove(id: number) {
+    return await this.prisma.coroinha.delete({
+      where: {
+        id_coroinha: id,
+      },
+    });
   }
 }

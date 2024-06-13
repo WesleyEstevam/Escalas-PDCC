@@ -10,7 +10,7 @@ export class CapelasService {
   async create(createCapelasDto: CreateCapelasDto) {
     const { nome_capela } = createCapelasDto;
 
-    const novaCapela = await this.prisma.capelas.create({
+    const novaCapela = await this.prisma.capela.create({
       data: {
         nome_capela,
       },
@@ -20,7 +20,7 @@ export class CapelasService {
   }
 
   findAll() {
-    return this.prisma.capelas.findMany();
+    return this.prisma.capela.findMany();
   }
 
   findOne(id: number) {

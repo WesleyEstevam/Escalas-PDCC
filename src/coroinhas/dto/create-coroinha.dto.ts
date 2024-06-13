@@ -1,14 +1,18 @@
-import { IsString, IsEmpty, IsNumber } from 'class-validator';
+import { IsString, IsEmpty, IsNumber, IsNotEmpty } from 'class-validator';
 export class CreateCoroinhaDto {
-  @IsEmpty()
+  @IsNotEmpty()
   @IsString()
   nome_coroinha: string;
 
-  @IsEmpty()
+  @IsNotEmpty()
   @IsString()
   sexo_coroinha: string;
 
   @IsEmpty()
   @IsNumber()
   altura_coroinha: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  tipo_coroinha: string;
 }

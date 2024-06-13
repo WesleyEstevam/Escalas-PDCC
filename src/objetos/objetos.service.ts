@@ -10,7 +10,7 @@ export class ObjetosService {
   create(createObjetoDto: CreateObjetoDto) {
     const { nome_objeto } = createObjetoDto;
 
-    const novoObjeto = this.prisma.objetos_Liturgicos.create({
+    const novoObjeto = this.prisma.objetoLiturgico.create({
       data: {
         nome_objeto,
       },
@@ -19,7 +19,7 @@ export class ObjetosService {
   }
 
   findAll() {
-    return this.prisma.objetos_Liturgicos.findMany();
+    return this.prisma.objetoLiturgico.findMany();
   }
 
   findOne(id: number) {

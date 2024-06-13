@@ -3,9 +3,9 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Patch,
 } from '@nestjs/common';
 import { EscalasService } from './escalas.service';
 import { CreateEscalaDto } from './dto/create-escala.dto';
@@ -20,23 +20,28 @@ export class EscalasController {
     return this.escalasService.create(createEscalaDto);
   }
 
+  // @Post(':id')
+  // createOne(@Body() createEscalaDto: CreateEscalaDto) {
+  //   return this.escalasService.create(createEscalaDto);
+  // }
+
   @Get()
   findAll() {
     return this.escalasService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: string) {
     return this.escalasService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateEscalaDto: UpdateEscalaDto) {
+  update(@Param('id') id: string, @Body() updateEscalaDto: UpdateEscalaDto) {
     return this.escalasService.update(+id, updateEscalaDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id') id: string) {
     return this.escalasService.remove(+id);
   }
 }

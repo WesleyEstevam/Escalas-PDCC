@@ -1,24 +1,37 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsString,
+  IsInt,
+  IsDateString,
+  IsArray,
+  ValidateNested,
+  ArrayMinSize,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class CreateEscalaDto {
-  @IsNumber()
-  id_capela: number;
-
-  @IsNumber()
+class CoroinhaDto {
+  @IsInt()
   id_coroinha: number;
 
-  @IsNumber()
+  @IsInt()
   id_objeto: number;
+}
 
-  @IsNotEmpty()
+export class CreateEscalaDto {
+  @IsInt()
+  id_capela: number;
+
   @IsString()
   horario_missa: string;
 
-  @IsNotEmpty()
   @IsString()
   tipo_cerimonia: string;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsDateString()
   data_escala: string;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CoroinhaDto)
+  @ArrayMinSize(1)
+  coroinhas?: CoroinhaDto[];
 }

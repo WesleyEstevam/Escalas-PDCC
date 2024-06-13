@@ -1,0 +1,20 @@
+    /*
+    const updatedEscala = await this.prisma.escala.update({
+      where: { id_escala: id },
+      data: {
+        id_capela,
+        horario_missa,
+        tipo_cerimonia,
+        data_escala,
+        coroinhas: {
+          create: coroinhas.map((coroinha) => ({
+            id_coroinha: coroinha.id_coroinha,
+            id_objeto: coroinha.id_objeto,
+          })),
+        },
+      },
+      include: {
+        coroinhas: true,
+      },
+    });
+*/

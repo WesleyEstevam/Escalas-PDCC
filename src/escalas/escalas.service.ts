@@ -8,35 +8,45 @@ export class EscalasService {
   constructor(private prisma: PrismaService) {}
 
   async create(createEscalaDto: CreateEscalaDto) {
-    const { id_capela, horario_missa, tipo_cerimonia, data_escala } =
+    const { id_capela, horario_missa, tipo_cerimonia, data_escala, coroinhas } =
       createEscalaDto;
 
-    const novaEscala = await this.prisma.escalas.create({
+    const escala = await this.prisma.escala.create({
       data: {
         id_capela,
         horario_missa,
         tipo_cerimonia,
-        data_escala,
+        data_escala: new Date(data_escala),
+        coroinhas: {
+          create: coroinhas.map((coroinha) => ({
+            id_coroinha: coroinha.id_coroinha,
+            id_objeto: coroinha.id_objeto,
+          })),
+        },
+      },
+      include: {
+        coroinhas: true,
       },
     });
-    return novaEscala;
+
+    return escala;
   }
 
   async verificarAltura(idCoroinha1: number, idCoroinha2: number) {
-    const coroinha1 = await this.prisma.coroinhas.findUnique({
+    const coroinha1 = await this.prisma.coroinha.findUnique({
       where: { id_coroinha: idCoroinha1 },
     });
 
-    const corinha2 = await this.prisma.coroinhas.findUnique({
+    const coroinha2 = await this.prisma.coroinha.findUnique({
       where: { id_coroinha: idCoroinha2 },
     });
 
-    if (!coroinha1 || !corinha2) {
+    if (!coroinha1 || !coroinha2) {
       throw new Error('Coroinha(s) não encontrado(s)');
     }
 
     const diferencaAltura = Math.abs(
-      coroinha1.altura_coroinha - corinha2.altura_coroinha,
+      coroinha1.altura_coroinha - coroinha2.altura_coroinha,
     );
 
     if (diferencaAltura > 20) {
@@ -50,7 +60,7 @@ export class EscalasService {
   }
 
   findAll() {
-    return this.prisma.escalas.findMany({
+    return this.prisma.escala.findMany({
       select: {
         id_escala: true,
         data_escala: true,
@@ -58,17 +68,21 @@ export class EscalasService {
         tipo_cerimonia: true,
         coroinhas: {
           select: {
-            nome_coroinha: true,
+            coroinha: {
+              select: {
+                nome_coroinha: true,
+              },
+            },
+            objetoLiturgico: {
+              select: {
+                nome_objeto: true,
+              },
+            },
           },
         },
-        capelas: {
+        capela: {
           select: {
             nome_capela: true,
-          },
-        },
-        nome_objeto: {
-          select: {
-            nome_objeto: true,
           },
         },
       },
@@ -76,22 +90,76 @@ export class EscalasService {
   }
 
   async findOne(id: number) {
-    return await this.prisma.escalas.findUnique({
+    return await this.prisma.escala.findUnique({
       where: {
         id_escala: id,
+      },
+      select: {
+        id_escala: true,
+        data_escala: true,
+        horario_missa: true,
+        tipo_cerimonia: true,
+        coroinhas: {
+          select: {
+            coroinha: {
+              select: {
+                nome_coroinha: true,
+              },
+            },
+            objetoLiturgico: {
+              select: {
+                nome_objeto: true,
+              },
+            },
+          },
+        },
+        capela: {
+          select: {
+            nome_capela: true,
+          },
+        },
       },
     });
   }
 
   async update(id: number, updateEscalaDto: UpdateEscalaDto) {
-    return await this.prisma.escalas.update({
-      where: { id_escala: id },
-      data: updateEscalaDto,
+    const { id_capela, horario_missa, tipo_cerimonia, data_escala, coroinhas } =
+      updateEscalaDto;
+
+    // Cria o objeto dataToUpdate com os campos que não são opcionais
+    const dataToUpdate: any = {
+      id_capela,
+      horario_missa,
+      tipo_cerimonia,
+      data_escala,
+    };
+
+    if (coroinhas && coroinhas.length > 0) {
+      dataToUpdate.coroinhas = {
+        create: coroinhas.map(({ id_coroinha, id_objeto }) => ({
+          id_coroinha,
+          id_objeto,
+        })),
+      };
+    } else {
+      return dataToUpdate;
+    }
+
+    const updatedEscala = await this.prisma.escala.update({
+      where: {
+        id_escala: id,
+      },
+      data: dataToUpdate,
+      include: {
+        coroinhas: true,
+      },
     });
+
+    return updatedEscala;
   }
 
   async remove(id: number) {
-    return await this.prisma.escalas.delete({
+    return await this.prisma.escala.delete({
       where: {
         id_escala: id,
       },
