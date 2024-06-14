@@ -35,21 +35,40 @@ export class EscalasService {
   async verificarAltura(idCoroinha1: number, idCoroinha2: number) {
     const coroinha1 = await this.prisma.coroinha.findUnique({
       where: { id_coroinha: idCoroinha1 },
+      include: { escalasCoroinhas: { include: { objetoLiturgico: true } } },
     });
 
     const coroinha2 = await this.prisma.coroinha.findUnique({
       where: { id_coroinha: idCoroinha2 },
+      include: { escalasCoroinhas: { include: { objetoLiturgico: true } } },
     });
 
     if (!coroinha1 || !coroinha2) {
       throw new Error('Coroinha(s) não encontrado(s)');
     }
 
+    const objetosLiturgicosEspecificos = [4, 5, 6]; // IDs dos objetos litúrgicos específicos
+
+    const objeto1 = coroinha1.escalasCoroinhas
+      .map((ec) => ec.objetoLiturgico.id_objeto)
+      .find((id) => objetosLiturgicosEspecificos.includes(id));
+    const objeto2 = coroinha2.escalasCoroinhas
+      .map((ec) => ec.objetoLiturgico.id_objeto)
+      .find((id) => objetosLiturgicosEspecificos.includes(id));
+
+    if (!objeto1 || !objeto2) {
+      return {
+        message:
+          'Os coroinhas não estão associados aos objetos litúrgicos necessários para verificação de altura',
+      };
+    }
+
     const diferencaAltura = Math.abs(
-      coroinha1.altura_coroinha - coroinha2.altura_coroinha,
+      (coroinha1.altura_coroinha || 0) - (coroinha2.altura_coroinha || 0),
     );
 
-    if (diferencaAltura > 20) {
+    if (diferencaAltura > 0.2) {
+      // Diferenca de 20 cm
       return {
         message:
           'Não é possível escalar os coroinhas! Muita diferença de altura',

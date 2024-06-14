@@ -6,6 +6,8 @@ import {
   Param,
   Delete,
   Patch,
+  Query,
+  BadRequestException,
 } from '@nestjs/common';
 import { EscalasService } from './escalas.service';
 import { CreateEscalaDto } from './dto/create-escala.dto';
@@ -19,11 +21,20 @@ export class EscalasController {
   create(@Body() createEscalaDto: CreateEscalaDto) {
     return this.escalasService.create(createEscalaDto);
   }
+  @Get('verificarAltura')
+  async verificarAltura(
+    @Query('idCoroinha1') idCoroinha1: string,
+    @Query('idCoroinha2') idCoroinha2: string,
+  ) {
+    const coroinha1 = parseInt(idCoroinha1, 10);
+    const coroinha2 = parseInt(idCoroinha2, 10);
 
-  // @Post(':id')
-  // createOne(@Body() createEscalaDto: CreateEscalaDto) {
-  //   return this.escalasService.create(createEscalaDto);
-  // }
+    if (isNaN(coroinha1) || isNaN(coroinha2)) {
+      throw new BadRequestException('IDs inválidos fornecidos');
+    }
+
+    return this.escalasService.verificarAltura(coroinha1, coroinha2);
+  }
 
   @Get()
   findAll() {
