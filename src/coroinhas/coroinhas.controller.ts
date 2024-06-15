@@ -20,6 +20,16 @@ export class CoroinhasController {
     return this.coroinhasService.create(createCoroinhaDto);
   }
 
+  @Patch(':id_coroinha/dispensar')
+  async dispensarCoroinha(@Param('id_coroinha') id_coroinha: number) {
+    return this.coroinhasService.toggleDispensa(Number(id_coroinha));
+  }
+
+  @Get('ativos')
+  findAllActive() {
+    return this.coroinhasService.findAllActive();
+  }
+
   @Get()
   findAll() {
     return this.coroinhasService.findAll();

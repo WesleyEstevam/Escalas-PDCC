@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCoroinhaDto } from './dto/create-coroinha.dto';
 import { UpdateCoroinhaDto } from './dto/update-coroinha.dto';
 import { PrismaService } from 'src/conexao/PrismaService';
@@ -23,16 +23,35 @@ export class CoroinhasService {
     return novoCoroinha;
   }
 
-  findAll() {
-    return this.prisma.coroinha.findMany();
+  async findOne(id_coroinha: number) {
+    return this.prisma.coroinha.findUnique({
+      where: { id_coroinha },
+    });
   }
 
-  findOne(id: number) {
-    return this.prisma.coroinha.findUnique({
+  async toggleDispensa(id_coroinha: number) {
+    const coroinha = await this.findOne(id_coroinha);
+    if (!coroinha) {
+      throw new NotFoundException('Coroinha não encontrado');
+    }
+    const newStatus = coroinha.status === 'ativo' ? 'dispensado' : 'ativo';
+    const updatedCoroinha = await this.prisma.coroinha.update({
+      where: { id_coroinha },
+      data: { status: newStatus },
+    });
+    return updatedCoroinha;
+  }
+
+  async findAllActive() {
+    return this.prisma.coroinha.findMany({
       where: {
-        id_coroinha: id,
+        status: 'ativo',
       },
     });
+  }
+
+  async findAll() {
+    return this.prisma.coroinha.findMany();
   }
 
   async update(id: number, updateCoroinhaDto: UpdateCoroinhaDto) {

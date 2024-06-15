@@ -12,6 +12,7 @@ model Coroinha {
   nome_coroinha   String
   sexo_coroinha   String
   altura_coroinha Float?
+  status          String     @default("ativo")
   tipo_coroinha   String
   escalasCoroinhas EscalaCoroinha[]
 }
