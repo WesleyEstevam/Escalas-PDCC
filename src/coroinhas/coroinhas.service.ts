@@ -50,6 +50,17 @@ export class CoroinhasService {
     });
   }
 
+  async filterName(nome_coroinha: string) {
+    return this.prisma.coroinha.findFirst({
+      where: {
+        nome_coroinha: {
+          contains: nome_coroinha,
+          mode: 'insensitive',
+        },
+      },
+    });
+  }
+
   async findAll() {
     return this.prisma.coroinha.findMany();
   }

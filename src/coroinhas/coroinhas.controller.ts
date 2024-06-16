@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
 } from '@nestjs/common';
 import { CoroinhasService } from './coroinhas.service';
 import { CreateCoroinhaDto } from './dto/create-coroinha.dto';
@@ -23,6 +24,17 @@ export class CoroinhasController {
   @Patch(':id_coroinha/dispensar')
   async dispensarCoroinha(@Param('id_coroinha') id_coroinha: number) {
     return this.coroinhasService.toggleDispensa(Number(id_coroinha));
+  }
+
+  @Get('nome/:nome_coroinha')
+  async filterName(@Param('nome_coroinha') nome_coroinha: string) {
+    const coroinha = await this.coroinhasService.filterName(nome_coroinha);
+    if (!coroinha) {
+      throw new NotFoundException(
+        `Coroinha com nome ${nome_coroinha} não encontrado`,
+      );
+    }
+    return coroinha;
   }
 
   @Get('ativos')
