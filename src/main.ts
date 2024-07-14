@@ -13,7 +13,7 @@ async function bootstrap() {
   // Configurar o cron job para enviar requisições a cada 5 minutos
   cron.schedule('*/5 * * * *', async () => {
     try {
-      await axios.get('http://localhost:3001/coroinhas'); // ou URL pública da sua aplicação
+      await axios.get(process.env.DATABASE_URL); // ou URL pública da sua aplicação
       console.log('Ping successful');
     } catch (error) {
       console.error('Ping failed:', error.message);
